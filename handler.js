@@ -250,7 +250,7 @@ module.exports = {
                     if (!isNumber(chat.add)) chat.add = 0
                     if (!('isBanned' in chat)) chat.isBanned = false
                     if (!('welcome' in chat)) chat.welcome = true
-                    if (!('detect' in settings) settings.detect = true
+                    if (!('detect' in settings)) chat.detect = false
                     if (!('sWelcome' in chat)) chat.sWelcome = ''
                     if (!('sBye' in chat)) chat.sBye = ''
                     if (!('sPromote' in chat)) chat.sPromote = ''
@@ -258,8 +258,8 @@ module.exports = {
                     if (!('desc' in chat)) chat.desc = true
                     if (!('descUpdate' in chat)) chat.descUpdate = true
                     if (!('stiker' in chat)) chat.stiker = false
-                    if (!('delete' in settings) settings.delete = false
-                    if (!('antiLink' in chat)) chat.antiLink = true
+                    if (!('delete' in chat)) chat.delete = false
+                    if (!('antiLink' in chat)) chat.antiLink = false
                     if (!isNumber(chat.expired)) chat.expired = 0
                     if (!('antiBadword' in chat)) chat.antiBadword = true
                     if (!('antispam' in chat)) chat.antispam = true
@@ -285,7 +285,7 @@ module.exports = {
                     descUpdate: true,
                     stiker: false,
                     delete: false,
-                    antiLink: true,
+                    antiLink: false,
                     expired: 0,
                     antiBadword: true,
                     antispam: true,
