@@ -1,1 +1,1 @@
-worker:pm2 && pm2-runtime index.js
+worker: node . --server
