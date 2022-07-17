@@ -250,7 +250,7 @@ module.exports = {
                     if (!isNumber(chat.add)) chat.add = 0
                     if (!('isBanned' in chat)) chat.isBanned = false
                     if (!('welcome' in chat)) chat.welcome = true
-                    if (!('detect' in chat)) chat.detect = true
+                    if (!('detect' in settings) settings.detect = true
                     if (!('sWelcome' in chat)) chat.sWelcome = ''
                     if (!('sBye' in chat)) chat.sBye = ''
                     if (!('sPromote' in chat)) chat.sPromote = ''
@@ -258,7 +258,7 @@ module.exports = {
                     if (!('desc' in chat)) chat.desc = true
                     if (!('descUpdate' in chat)) chat.descUpdate = true
                     if (!('stiker' in chat)) chat.stiker = false
-                    if (!('delete' in chat)) chat.delete = false
+                    if (!('delete' in settings) settings.delete = false
                     if (!('antiLink' in chat)) chat.antiLink = true
                     if (!isNumber(chat.expired)) chat.expired = 0
                     if (!('antiBadword' in chat)) chat.antiBadword = true
@@ -658,7 +658,29 @@ module.exports = {
             if (groupUpdate.restrict == true) text = (chats.sRestrictOn || this.sRestrictOn || conn.sRestrictOn || '```Grup telah semua peserta')
             if (groupUpdate.restrict == false) text = (chats.sRestrictOff || this.sRestrictOff || conn.sRestrictOff || '```Group Berhasil Khusus Admin')
             //console.log('=============\n\ngroupsUpdate \n\n============\n\n' + await groupUpdate)
+            if (!text) continue
+            await this.sendButtonDoc(id, text, wm, 'Matikan Fitur', `.off detect`, global.fkontak, { contextInfo: global.adReply.contextInfo, mentions: await this.parseMention(text) })
+        }
+    },
+    async delete({ remoteJid, fromMe, id, participant }) {
+        if (fromMe) return
+        let chats = Object.entries(await this.chats).find(([user, data]) => data.messages && data.messages[id])
+        if (!chats) return
+        let msg = JSON.parse(JSON.stringify(chats[1].messages[id]))
+        let chat = global.db.data.chats[msg.key.remoteJid] || {}
+        if (chat.delete) return
+        await this.sendButton(msg.key.remoteJid, `
+Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
+Untuk mematikan fitur ini, ketik
+*.enable delete*
+`.trim(), wm, 'Matikan Fitur ini', '.enable delete', msg, {
+            mentions: [participant]
+        })
+        await this.delay(1000)
+        this.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))
+    }
 }
+
 global.dfail = async (type, m, conn) => {
     let msg = {
         rowner: `Perintah ini hanya dapat digunakan oleh _*Team Bot Discussion!1!1!*_`,
