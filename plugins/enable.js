@@ -66,7 +66,13 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
           throw false
         }
       }
-      chat.delete = isEnable
+      case 'delete':
+      isAll = true
+      if (!isROwner) {
+        global.dfail('rowner', m, conn)
+        throw false
+      }
+      setting.delete = !isEnable
       break
     case 'viewonce':
     case 'antiviewonce':
@@ -77,15 +83,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
         }
       }
       chat.viewonce = isEnable
-      break
-    case 'antidelete':
-      if (m.isGroup) {
-        if (!(isAdmin || isOwner)) {
-          global.dfail('admin', m, conn)
-          throw false
-        }
-      }
-      chat.delete = !isEnable
       break
     case 'antibadword':
       if (m.isGroup) {
